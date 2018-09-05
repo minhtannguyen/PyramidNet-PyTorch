@@ -239,7 +239,7 @@ class PyramidNet(nn.Module):
             self.final_featuremap_dim = self.input_featuremap_dim
             self.bn_final= nn.BatchNorm2d(self.final_featuremap_dim)
             self.bn_finalmin= nn.BatchNorm2d(self.final_featuremap_dim)
-            self.relu_final = nn.ReLU(inplace=True)
+            self.relu_final = nn.ReLU(inplace=False)
             self.nrelu_final = NRelu(inplace=False)
             self.avgpool = nn.AvgPool2d(8)
             self.fc = nn.Linear(self.final_featuremap_dim, num_classes)
@@ -266,12 +266,12 @@ class PyramidNet(nn.Module):
             self.input_featuremap_dim = self.inplanes
             self.conv1 = nn.Conv2d(3, self.input_featuremap_dim, kernel_size=7, stride=2, padding=3, bias=False)
             self.bn1 = nn.BatchNorm2d(self.input_featuremap_dim)
-            self.relu = nn.ReLU(inplace=True)
+            self.relu = nn.ReLU(inplace=False)
             self.nrelu = NRelu(inplace=False)
             self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
 
             self.featuremap_dim = self.input_featuremap_dim 
-            self.layer1 = self.pyramidal_make_layer(blocks[depth], layers[depth][0], block_no=1, same_input=True)
+            self.layer1 = self.pyramidal_make_layer(blocks[depth], layers[depth][0], block_no=1, same_input=False)
             self.layer2 = self.pyramidal_make_layer(blocks[depth], layers[depth][1], block_no=2, stride=2)
             self.layer3 = self.pyramidal_make_layer(blocks[depth], layers[depth][2], block_no=3, stride=2)
             self.layer4 = self.pyramidal_make_layer(blocks[depth], layers[depth][3], block_no=4, stride=2)
@@ -279,7 +279,7 @@ class PyramidNet(nn.Module):
             self.final_featuremap_dim = self.input_featuremap_dim
             self.bn_final= nn.BatchNorm2d(self.final_featuremap_dim)
             self.bn_finalmin= nn.BatchNorm2d(self.final_featuremap_dim)
-            self.relu_final = nn.ReLU(inplace=True)
+            self.relu_final = nn.ReLU(inplace=False)
             self.nrelu_final = NRelu(inplace=False)
             self.avgpool = nn.AvgPool2d(7) 
             self.fc = nn.Linear(self.final_featuremap_dim, num_classes)
@@ -338,7 +338,7 @@ class PyramidNet(nn.Module):
             xmax = self.maxpool(xmax)
             xmin = -self.maxpool(-xmin)
 
-            xmax, xmin = self.layer1([x,x])
+            xmax, xmin = self.layer1([xmax,xmin])
             xmax, xmin = self.layer2([xmax, xmin])
             xmax, xmin = self.layer3([xmax, xmin])
             xmax, xmin = self.layer4([xmax, xmin])
